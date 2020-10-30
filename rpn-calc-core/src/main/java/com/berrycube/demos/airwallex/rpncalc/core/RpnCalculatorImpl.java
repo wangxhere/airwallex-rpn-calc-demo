@@ -1,67 +1,72 @@
 package com.berrycube.demos.airwallex.rpncalc.core;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.math.MathContext;
 import java.util.*;
 
 public class RpnCalculatorImpl implements RpnCalculator {
 
-    private Queue<Stack<BigDecimal>> history;
+    private Stack<Stack<BigDecimal>> history;
     private Stack<BigDecimal> stack;
 
-    public RpnCalculatorImpl(Queue<Stack<BigDecimal>> history, Stack<BigDecimal> stack) {
+    public RpnCalculatorImpl(Stack<Stack<BigDecimal>> history, Stack<BigDecimal> stack) {
         this.history = history;
         this.stack = stack;
     }
 
     @Override
     public void push(BigDecimal operand) {
-        history.offer(stack);
+        saveHistory();
         stack.push(operand);
     }
 
     @Override
     public void add() {
-        history.offer(stack);
+        saveHistory();
         Stack<BigDecimal> operands = getOperands(2);
         stack.push(operands.pop().add(operands.pop()));
     }
 
     @Override
     public void sub() {
-        history.offer(stack);
+        saveHistory();
         Stack<BigDecimal> operands = getOperands(2);
         stack.push(operands.pop().subtract(operands.pop()));
     }
 
     @Override
     public void mul() {
-        history.offer(stack);
+        saveHistory();
         Stack<BigDecimal> operands = getOperands(2);
         stack.push(operands.pop().multiply(operands.pop()));
     }
 
     @Override
     public void div() {
-        history.offer(stack);
+        saveHistory();
         Stack<BigDecimal> operands = getOperands(2);
-        stack.push(operands.pop().divide(operands.pop(), RoundingMode.HALF_UP));
+        stack.push(operands.pop().divide(operands.pop(), MathContext.DECIMAL128));
     }
 
     @Override
     public void sqrt() {
-        history.offer(stack);
+        saveHistory();
         Stack<BigDecimal> operands = getOperands(1);
-        stack.push(BigDecimal.valueOf(Math.sqrt(operands.pop().doubleValue())));
+        stack.push(sqrt(operands.pop()));
     }
 
     @Override
     public void undo() {
-        Optional.ofNullable(history.poll()).ifPresent(s -> stack = s);
+        try {
+            stack = history.pop();
+        } catch (EmptyStackException ignored) {
+
+        }
     }
 
     @Override
     public void clear() {
+        saveHistory();
         while (!stack.isEmpty()) {
             stack.pop();
         }
@@ -74,7 +79,7 @@ public class RpnCalculatorImpl implements RpnCalculator {
     }
 
     private Stack<BigDecimal> getOperands(int num) {
-        Stack<BigDecimal> operands = new Stack<BigDecimal>();
+        Stack<BigDecimal> operands = new Stack<>();
         try {
             for (int i=0; i<num; i++) {
                 operands.push(stack.pop());
@@ -86,6 +91,16 @@ public class RpnCalculatorImpl implements RpnCalculator {
             throw ex;
         }
         return operands;
+    }
+
+    private BigDecimal sqrt(BigDecimal operand) {
+        BigDecimal interm = BigDecimal.valueOf(Math.sqrt(operand.doubleValue()));
+        return interm.add(BigDecimal.valueOf(operand.subtract(interm.multiply(interm)).doubleValue() / (interm.doubleValue() * 2.0)));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void saveHistory() {
+        history.push((Stack<BigDecimal>) stack.clone());
     }
 
 }
