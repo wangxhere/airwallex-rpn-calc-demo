@@ -1,0 +1,37 @@
+"input", "output"
+"5 2", "stack: 5 2"
+"2 sqrt
+clear 9 sqrt", "stack: 1.4142135623
+stack: 3"
+"5 2 -
+3 -
+clear","stack: 3
+stack: 0
+stack:"
+"5 4 3 2
+undo undo *
+5 *
+undo","stack: 5 4 3 2
+stack: 20
+stack: 100
+stack: 20 5"
+"7 12 2 /
+*
+4 /","stack: 7 6
+stack: 42
+stack: 10.5"
+"1 2 3 4 5
+*
+clear 3 4 -","stack: 1 2 3 4 5
+stack: 1 2 3 20
+stack: -1"
+"1 2 3 4 5
+* * * *","stack: 1 2 3 4 5
+stack: 120"
+"1 2 3 * 5 + * * 6 5","operator * (position: 15): insufficient parameters||stack: 11"
+"1 2 3 4 5
+* * * *","stack: 1 2 3 4 5
+stack: 120"
+"1 2 3 * 5  + * * 6 5","operator * (position: 16): insufficient parameters||stack: 11"
+"1 0 /","operator / (position: 5): arithmetic exception||stack:"
+"1 -1 sqrt","operator sqrt (position: 6): number format exception||stack: 1"

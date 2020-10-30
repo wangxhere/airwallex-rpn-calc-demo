@@ -29,6 +29,11 @@
 				<version>${junit-jupiter-engine.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-params</artifactId>
+				<version>${junit-jupiter-engine.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>net.jqwik</groupId>
 				<artifactId>jqwik</artifactId>
 				<version>${jqwik.version}</version>
@@ -40,6 +45,11 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
