@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.berrycube.demos.airwallex.rpncalc</groupId>
 	<artifactId>rpn-calculator</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1.0-RPN-CALC-SNAPSHOT</version>
 
 	<modules>
-		<module>rpn-calc-core</module>
-		<module>rpn-calc-cli</module>
+		<module>rpn-calc-controller</module>
+		<module>rpn-calc-domain</module>
 		<module>rpn-calc-starter</module>
 	</modules>
 
