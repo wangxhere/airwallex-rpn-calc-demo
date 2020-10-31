@@ -13,6 +13,11 @@ import java.util.stream.Collectors;
 public class CliControllerImpl implements CliController {
 
     private static final String DELIMITER = "\\s+";
+    private static final String ERROR_MSG_TEMPLATE = "operator %s (position: %d): %s";
+    private static final String UNKNOWN_ERROR = "unknown error";
+    private static final String INSUFFICIENT_PARAMETERS = "insufficient parameters";
+    private static final String ARITHMETIC_EXCEPTION = "arithmetic exception";
+    private static final String NUM_FORMAT_EXCEPTION = "number format exception";
 
     private RpnCalculator calculator;
 
@@ -33,23 +38,23 @@ public class CliControllerImpl implements CliController {
                 try {
                     handleOperator(token);
                 } catch (RuntimeException ex)  {
-                    errorMessage = buildErrorMessage(ex, line, tokens, i, "operator %s (position: %d): insufficient parameters");
+                    errorMessage = buildErrorMessage(ex, line, tokens, i);
                     break;
                 }
             }
         }
-        return errorMessage.map(msg -> msg + System.lineSeparator()).orElse("") + String.format("stack: %s", visualize(calculator.dumpStack()));
+        return errorMessage.map(msg -> msg + System.lineSeparator()).orElse("") +
+                String.format("stack: %s", visualize(calculator.dumpStack()));
     }
 
-    private Optional<String> buildErrorMessage(RuntimeException ex, String line, String[] tokens, int i, String s) {
-        final String ERROR_MSG_TEMPLATE = "operator %s (position: %d): %s";
-        String errorMessage = "unknown error";
+    private Optional<String> buildErrorMessage(RuntimeException ex, String line, String[] tokens, int i) {
+        String errorMessage = UNKNOWN_ERROR;
         if (ex instanceof EmptyStackException) {
-            errorMessage = "insufficient parameters";
+            errorMessage = INSUFFICIENT_PARAMETERS;
         } else if (ex instanceof ArithmeticException) {
-            errorMessage = "arithmetic exception";
+            errorMessage = ARITHMETIC_EXCEPTION;
         } else if (ex instanceof NumberFormatException) {
-            errorMessage = "number format exception";
+            errorMessage = NUM_FORMAT_EXCEPTION;
         }
         return Optional.of(String.format(ERROR_MSG_TEMPLATE, tokens[i], backtrackFaultPosition(line, tokens, i), errorMessage));
     }
