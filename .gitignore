@@ -41,3 +41,4 @@ hs_err_pid*
 *.idea
 rpn-calc-core/.jqwik-database
 rpn-calc-core/src/test/java/com/berrycube/demos/airwallex/rpncalc/utils/
+**/.jqwik-database
